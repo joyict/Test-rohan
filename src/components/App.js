@@ -54,6 +54,8 @@ function App() {
         getEthBalance();
       }
     }
+  }
+  )
 
   // Check if already connected
   const checkConnection = async () => {
