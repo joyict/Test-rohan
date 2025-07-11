@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-// import { toast } from "react-toastify";
-import { Alert } from "../Toast/Toast";
+import { Badge } from "react-bootstrap";
 import "./Transfer.css";
-// import axios from "axios";
-// import { API_URL } from "../config";
 
 const Transfer = (props) => {
-  const { quantity, setQuantity, totalQuantity, balanceAmount } = props;
+  const { quantity, setQuantity, totalQuantity, balanceAmount, tokenSymbol } = props;
+
+  const isInsufficientBalance = balanceAmount < totalQuantity;
+
   return (
     <div className="eth_transfer">
       <div className="_ethamount">
@@ -20,27 +20,33 @@ const Transfer = (props) => {
             aria-label="Large"
             aria-describedby="inputGroup-sizing-sm"
             type="number"
-            placeholder="input per quatity"
+            step="0.000001"
+            min="0"
+            placeholder="Enter amount per recipient"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(Number(e.target.value))}
           />
+          {tokenSymbol && (
+            <InputGroup.Text>
+              <Badge bg="primary">{tokenSymbol}</Badge>
+            </InputGroup.Text>
+          )}
         </InputGroup>
       </div>
+      
       <div className="totalToken">
-        <h4
-          style={
-            balanceAmount <= totalQuantity
-              ? { color: "red" }
-              : { color: "green" }
-          }
-        >
-          Total :{" "}
-          {balanceAmount <= totalQuantity
-            ? `${totalQuantity} - insufficient!`
-            : totalQuantity}
+        <h4 style={{ color: isInsufficientBalance ? "red" : "green" }}>
+          Total Required: {totalQuantity.toFixed(6)} {tokenSymbol}
+          {isInsufficientBalance && (
+            <div>
+              <Badge bg="danger">Insufficient Balance!</Badge>
+            </div>
+          )}
         </h4>
+        <small className="text-muted">
+          Available: {balanceAmount.toFixed(6)} {tokenSymbol}
+        </small>
       </div>
-      <Alert />
     </div>
   );
 };
