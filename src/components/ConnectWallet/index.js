@@ -1,5 +1,4 @@
 import Button from "react-bootstrap/Button";
-import { Badge } from "react-bootstrap";
 
 const ConnectWallet = (props) => {
   const { handleConnect, isConnected, account, chainId, ethBalance } = props;

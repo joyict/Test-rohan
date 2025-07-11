@@ -1,7 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Badge } from "react-bootstrap";
 import "./Transfer.css";
 
 const Transfer = (props) => {
