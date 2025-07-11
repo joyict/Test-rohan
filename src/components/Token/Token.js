@@ -25,44 +25,60 @@ const TokenPart = (props) => {
   ];
 
   return (
-    <div className="tokenaddr">
-      <InputGroup size="lg" className="inputgroup">
-        <InputGroup.Text id="inputGroup-sizing-lg">
-          Token Address
+    <div className="mb-4">
+      <h4 className="mb-3">🪙 Token Configuration</h4>
+      
+      <div className="modern-input-group">
+        <InputGroup size="lg">
+          <InputGroup.Text>
+            🔗 Token Contract
         </InputGroup.Text>
         <Form.Control
-          aria-label="Large"
-          aria-describedby="inputGroup-sizing-sm"
           placeholder="Enter ERC-20 token contract address"
           value={tokenaddress}
           onChange={handleAddressChange}
         />
-        <Button variant="outline-secondary" onClick={handleRefresh}>
+          <Button className="modern-btn modern-btn-outline" onClick={handleRefresh}>
           🔄
         </Button>
       </InputGroup>
+      </div>
       
       {/* Quick Select Common Tokens */}
-      <div className="mt-2 mb-3">
-        <small className="text-muted">Quick select: </small>
+      <div className="mb-3">
+        <small className="text-muted fw-bold">Quick select popular tokens:</small>
+        <div className="quick-actions mt-2">
         {commonTokens.map((token) => (
-          <Badge
+          <span
             key={token.address}
-            bg="secondary"
-            className="me-2 cursor-pointer"
-            style={{ cursor: "pointer" }}
+            className="quick-action-btn"
             onClick={() => setTokenAddress(token.address)}
           >
-            {token.symbol}
-          </Badge>
+            💰 {token.symbol}
+          </span>
         ))}
+        </div>
       </div>
 
-      <div className="balanceToken">
-        <h4>
-          Balance: {balanceAmount.toFixed(6)} {tokenSymbol && <Badge bg="primary">{tokenSymbol}</Badge>}
-          }
-        </h4>
+      {/* Token Balance Display */}
+      <div className="d-flex align-items-center justify-content-between p-3" 
+           style={{ background: "rgba(102, 126, 234, 0.05)", borderRadius: "12px", border: "1px solid rgba(102, 126, 234, 0.1)" }}>
+        <div>
+          <h5 className="mb-1">💰 Your Balance</h5>
+          <div className="d-flex align-items-center">
+            <span className="h4 mb-0 me-2">{balanceAmount.toFixed(6)}</span>
+            {tokenSymbol && (
+              <span className="modern-badge modern-badge-primary">
+                {tokenSymbol}
+              </span>
+            )}
+          </div>
+        </div>
+        {tokenSymbol && (
+          <div className="text-end">
+            <small className="text-muted">Token detected ✅</small>
+          </div>
+        )}
       </div>
     </div>
   );

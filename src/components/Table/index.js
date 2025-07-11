@@ -134,17 +134,146 @@ const SenderTable = (props) => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Recipient Addresses ({wallets.length})</h4>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="mb-0">📋 Recipient Addresses</h3>
         <div>
-          <Badge bg={wallets.length > 0 ? "success" : "secondary"}>
+          <span className={`modern-badge ${wallets.length > 0 ? 'modern-badge-success' : 'modern-badge-primary'}`}>
             {wallets.length} addresses loaded
-          </Badge>
+          </span>
         </div>
       </div>
 
       {error && (
-        <Alert variant="danger" onClose={() => setError("")} dismissible>
+        <div className="modern-alert modern-alert-danger">
+          <strong>Validation Error:</strong> {error}
+          <button 
+            className="btn-close float-end" 
+            onClick={() => setError("")}
+          ></button>
+        </div>
+      )}
+
+      {/* File Upload Area */}
+      <div className="file-upload-area mb-4" onClick={() => document.getElementById("csvFileInput").click()}>
+        <div className="file-upload-icon">📁</div>
+        <h5>Upload CSV File</h5>
+        <p className="text-muted mb-0">Click here or drag and drop your CSV file with recipient addresses</p>
+        <Form.Control
+          type="file"
+          accept=".csv"
+          onChange={handleFileUpload}
+          disabled={!isConnected}
+          style={{ display: "none" }}
+          id="csvFileInput"
+        />
+      </div>
+
+      {/* Manual Address Input */}
+      <div className="modern-input-group">
+        <InputGroup size="lg">
+          <InputGroup.Text>🔗 Address</InputGroup.Text>
+          <Form.Control
+            placeholder="Enter Ethereum address (0x...)"
+            value={newAddress}
+            onChange={(e) => setNewAddress(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleAddAddress()}
+            disabled={!isConnected}
+            className="modern-input"
+          />
+          <Button 
+            className="modern-btn modern-btn-primary"
+            onClick={handleAddAddress}
+            disabled={!isConnected}
+          >
+            Add
+          </Button>
+        </InputGroup>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="quick-actions">
+        <span
+          className="quick-action-btn"
+          onClick={loadSampleAddresses}
+          style={{ display: !isConnected ? 'none' : 'inline-block' }}
+        >
+          📝 Load Sample
+        </span>
+        
+        {wallets.length > 0 && (
+          <span
+            className="quick-action-btn"
+            onClick={handleClearAll}
+            style={{ borderColor: '#ff416c', color: '#ff416c' }}
+          >
+            🗑️ Clear All
+          </span>
+        )}
+      </div>
+
+      {/* Addresses Table */}
+      <div style={{ maxHeight: "400px", overflowY: "auto", borderRadius: "16px" }}>
+        <Table className="modern-table" responsive>
+          <thead>
+            <tr>
+              <th style={{ width: "80px" }}>#</th>
+              <th>Wallet Address</th>
+              <th style={{ width: "120px" }}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {wallets && wallets.length > 0 ? (
+              wallets.map((address, idx) => (
+                <tr key={idx}>
+                  <td className="fw-bold">{idx + 1}</td>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <code style={{ fontSize: "0.9em", background: "rgba(102, 126, 234, 0.1)", padding: "4px 8px", borderRadius: "6px" }}>
+                        {address}
+                      </code>
+                      {!isValidAddress(address) && (
+                        <span className="modern-badge modern-badge-danger ms-2">Invalid</span>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    <Button
+                      className="modern-btn modern-btn-danger"
+                      size="sm"
+                      onClick={() => handleRemoveAddress(idx)}
+                    >
+                      Remove
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="text-center text-muted py-5">
+                  {isConnected 
+                    ? "🔍 No addresses loaded. Upload a CSV file or add addresses manually." 
+                    : "🔒 Please connect your wallet to manage addresses."
+                  }
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </div>
+
+      {/* CSV Format Help */}
+      <div className="mt-4 p-3" style={{ background: "rgba(102, 126, 234, 0.05)", borderRadius: "12px", border: "1px solid rgba(102, 126, 234, 0.1)" }}>
+        <h6 className="text-primary mb-2">📋 CSV Format Guide</h6>
+        <small className="text-muted">
+          Each line should contain one Ethereum address. Headers are optional.<br/>
+          <strong>Example:</strong> <code>0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6</code>
+        </small>
+      </div>
+    </div>
+  );
+};
+
+export default SenderTable;
           {error}
         </Alert>
       )}

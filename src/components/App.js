@@ -312,17 +312,25 @@ function App() {
 
   return (
     <div className="App">
-      <Nav />
-      <div style={{ opacity: loading ? 0.5 : 1 }}>
-        {loading && (
-          <div className="d-flex justify-content-center align-items-center custom-loading">
-            <Spinner animation="border" variant="primary" role="status" />
-            <span className="ms-2">Processing...</span>
-          </div>
-        )}
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+          <div className="loading-text">Processing transactions...</div>
+        </div>
+      )}
+      
+      <div className="modern-container">
+        {/* Modern Header */}
+        <div className="gradient-header">
+          <h1>🚀 Airdrop Multisender</h1>
+          <p>Distribute tokens efficiently to multiple recipients</p>
+        </div>
 
-        {/* Connection Status */}
-        <div className="connectWallet">
+        {/* Navigation with Connect Wallet */}
+        <div className="modern-nav d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center">
+            <span className="fw-bold text-primary">Dashboard</span>
+          </div>
           <ConnectWallet
             handleConnect={handleConnect}
             isConnected={isConnected}
@@ -332,77 +340,101 @@ function App() {
           />
         </div>
 
-        {/* Error Display */}
-        {error && (
-          <div className="mx-4 mt-3">
-            <Alert variant="danger" onClose={() => setError("")} dismissible>
-              {error}
-            </Alert>
-          </div>
-        )}
+        <div className="p-4">
+          {/* Error Display */}
+          {error && (
+            <div className="modern-alert modern-alert-danger">
+              <strong>Error:</strong> {error}
+              <button 
+                className="btn-close float-end" 
+                onClick={() => setError("")}
+              ></button>
+            </div>
+          )}
 
-        {/* MetaMask Installation Warning */}
-        {!isMetaMaskInstalled() && (
-          <div className="mx-4 mt-3">
-            <Alert variant="warning">
-              <Alert.Heading>MetaMask Required</Alert.Heading>
+          {/* MetaMask Installation Warning */}
+          {!isMetaMaskInstalled() && (
+            <div className="modern-alert modern-alert-warning">
+              <h5>MetaMask Required</h5>
               <p>
                 Please install MetaMask to use this application.{" "}
                 <a
                   href="https://metamask.io/download/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="alert-link"
+                  className="text-decoration-none fw-bold"
                 >
-                  Download MetaMask
+                  Download MetaMask →
                 </a>
               </p>
-            </Alert>
+            </div>
+          )}
+
+          {/* Stats Overview */}
+          {isConnected && (
+            <div className="stats-grid fade-in">
+              <div className="stat-card">
+                <div className="stat-number">{wallets.length}</div>
+                <div className="stat-label">Recipients</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">{balanceAmount.toFixed(2)}</div>
+                <div className="stat-label">{tokenSymbol || 'Token'} Balance</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">{ethBalance.toFixed(4)}</div>
+                <div className="stat-label">ETH Balance</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-number">{(wallets.length * quantity).toFixed(2)}</div>
+                <div className="stat-label">Total to Send</div>
+              </div>
+            </div>
+          )}
+
+          {/* Recipient Addresses Table */}
+          <div className="glass-card slide-up">
+            <SenderTable 
+              wallets={wallets} 
+              setWallets={setWallets} 
+              isConnected={isConnected}
+            />
           </div>
-        )}
 
-        {/* Recipient Addresses Table */}
-        <div className="event">
-          <SenderTable 
-            wallets={wallets} 
-            setWallets={setWallets} 
-            isConnected={isConnected}
-          />
-        </div>
+          {/* Token and Transfer Configuration */}
+          <div className="glass-card slide-up">
+            <TokenPart
+              tokenaddress={tokenAddress}
+              setTokenAddress={setTokenAddress}
+              balanceAmount={balanceAmount}
+              tokenSymbol={tokenSymbol}
+              onTokenChange={getTokenBalance}
+            />
+            <Transfer
+              quantity={quantity}
+              setQuantity={setQuantity}
+              totalQuantity={wallets?.length ? wallets.length * quantity : 0}
+              balanceAmount={balanceAmount}
+              tokenSymbol={tokenSymbol}
+            />
+            <Fee
+              fee={fee}
+              setFee={setFee}
+              totalFee={wallets?.length ? wallets.length * fee : 0}
+              ethBalance={ethBalance}
+            />
+          </div>
 
-        {/* Token and Transfer Configuration */}
-        <div className="main">
-          <TokenPart
-            tokenaddress={tokenAddress}
-            setTokenAddress={setTokenAddress}
-            balanceAmount={balanceAmount}
-            tokenSymbol={tokenSymbol}
-            onTokenChange={getTokenBalance}
-          />
-          <Transfer
-            quantity={quantity}
-            setQuantity={setQuantity}
-            totalQuantity={wallets?.length ? wallets.length * quantity : 0}
-            balanceAmount={balanceAmount}
-            tokenSymbol={tokenSymbol}
-          />
-          <Fee
-            fee={fee}
-            setFee={setFee}
-            totalFee={wallets?.length ? wallets.length * fee : 0}
-            ethBalance={ethBalance}
-          />
-        </div>
-
-        {/* Airdrop Button */}
-        <div className="airdrop">
-          <Airdrop
-            isConnected={canAirdrop()}
-            handleAirdrop={handleAirdrop}
-            walletCount={wallets.length}
-            totalTokens={wallets.length * quantity}
-            totalFee={wallets.length * fee}
-          />
+          {/* Airdrop Summary and Button */}
+          <div className="airdrop-summary slide-up">
+            <Airdrop
+              isConnected={canAirdrop()}
+              handleAirdrop={handleAirdrop}
+              walletCount={wallets.length}
+              totalTokens={wallets.length * quantity}
+              totalFee={wallets.length * fee}
+            />
+          </div>
         </div>
       </div>
 

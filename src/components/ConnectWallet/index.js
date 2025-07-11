@@ -23,20 +23,32 @@ const ConnectWallet = (props) => {
   return (
     <div className="d-flex flex-column align-items-end">
       {isConnected && (
-        <div className="mb-2 text-end">
-          <div className="small text-muted">
-            <div>Account: <strong>{formatAddress(account)}</strong></div>
-            <div>Network: <Badge bg="info">{getNetworkName(chainId)}</Badge></div>
-            <div>ETH Balance: <strong>{ethBalance.toFixed(4)} ETH</strong></div>
+        <div className="mb-3 text-end">
+          <div className="small">
+            <div className="mb-1">
+              <span className="modern-badge modern-badge-info me-2">
+                {formatAddress(account)}
+              </span>
+            </div>
+            <div className="mb-1">
+              <span className="modern-badge modern-badge-primary me-2">
+                {getNetworkName(chainId)}
+              </span>
+            </div>
+            <div>
+              <span className="modern-badge modern-badge-warning">
+                {ethBalance.toFixed(4)} ETH
+              </span>
+            </div>
           </div>
         </div>
       )}
       <Button
-        className={isConnected ? "btn btn-success" : "btn btn-primary"}
+        className={isConnected ? "connect-wallet-modern connected" : "connect-wallet-modern"}
         onClick={handleConnect}
         size="lg"
       >
-        {isConnected ? "🟢 Connected" : "🔗 Connect MetaMask"}
+        {isConnected ? "✅ Connected" : "🔗 Connect MetaMask"}
       </Button>
     </div>
   );

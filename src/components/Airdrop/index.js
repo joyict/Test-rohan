@@ -5,33 +5,47 @@ const Airdrop = (props) => {
   const { isConnected, handleAirdrop, walletCount, totalTokens, totalFee } = props;
 
   return (
-    <div className="text-center">
-      <div className="mb-3">
-        <h5>Airdrop Summary</h5>
-        <div className="d-flex justify-content-center gap-3 mb-3">
-          <Badge bg="info">Recipients: {walletCount}</Badge>
-          <Badge bg="success">Total Tokens: {totalTokens.toFixed(6)}</Badge>
-          <Badge bg="warning">Total Gas: {totalFee.toFixed(6)} ETH</Badge>
+    <div className="text-center position-relative">
+      <h3 className="mb-4">🚀 Launch Airdrop</h3>
+      
+      <div className="summary-stats">
+        <div className="summary-stat">
+          <span className="summary-stat-number">{walletCount}</span>
+          <span className="summary-stat-label">Recipients</span>
+        </div>
+        <div className="summary-stat">
+          <span className="summary-stat-number">{totalTokens.toFixed(2)}</span>
+          <span className="summary-stat-label">Total Tokens</span>
+        </div>
+        <div className="summary-stat">
+          <span className="summary-stat-number">{totalFee.toFixed(4)}</span>
+          <span className="summary-stat-label">Total Gas (ETH)</span>
         </div>
       </div>
       
       <Button
-        className={isConnected ? "btn btn-success btn-lg" : "btn btn-secondary btn-lg"}
+        className={isConnected ? "modern-btn modern-btn-success" : "modern-btn modern-btn-outline"}
         onClick={handleAirdrop}
         disabled={!isConnected}
-        style={{ minWidth: "200px" }}
+        style={{ 
+          minWidth: "250px", 
+          fontSize: "1.2rem", 
+          padding: "15px 30px",
+          position: "relative",
+          zIndex: 1
+        }}
       >
         {isConnected ? (
-          <>🚀 Start Airdrop</>
+          <>🚀 Execute Airdrop</>
         ) : (
-          <>⚠️ Requirements Not Met</>
+          <>⚠️ Check Requirements</>
         )}
       </Button>
       
       {!isConnected && (
-        <div className="mt-2">
-          <small className="text-muted">
-            Ensure wallet is connected, addresses are loaded, and you have sufficient balance
+        <div className="mt-3 position-relative" style={{ zIndex: 1 }}>
+          <small style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+            ✓ Connect wallet ✓ Load addresses ✓ Check balances
           </small>
         </div>
       )}

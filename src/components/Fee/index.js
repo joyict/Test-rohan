@@ -10,15 +10,15 @@ const Fee = (props) => {
   const isInsufficientGas = ethBalance < totalFee;
 
   return (
-    <div className="eth_transfer">
-      <div className="_ethamount">
-        <InputGroup size="lg" className="eth_amount">
-          <InputGroup.Text id="inputGroup-sizing-lg">
-            Gas Fee per TX
+    <div className="mb-4">
+      <h4 className="mb-3">⛽ Gas Fee Configuration</h4>
+      
+      <div className="modern-input-group">
+        <InputGroup size="lg">
+          <InputGroup.Text>
+            ⛽ Gas per Transaction
           </InputGroup.Text>
           <Form.Control
-            aria-label="Large"
-            aria-describedby="inputGroup-sizing-sm"
             type="number"
             step="0.0001"
             min="0"
@@ -26,24 +26,35 @@ const Fee = (props) => {
             value={fee}
             onChange={(e) => setFee(Number(e.target.value))}
           />
-          <InputGroup.Text>
-            <Badge bg="warning">ETH</Badge>
+          <InputGroup.Text style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", color: "white", border: "none" }}>
+            ETH
           </InputGroup.Text>
         </InputGroup>
       </div>
       
-      <div className="totalToken">
-        <h4 style={{ color: isInsufficientGas ? "red" : "green" }}>
-          Total Gas: {totalFee.toFixed(6)} ETH
-          {isInsufficientGas && (
-            <div>
-              <Badge bg="danger">Insufficient ETH!</Badge>
+      {/* Gas Calculation Display */}
+      <div className={`p-3 rounded-3 ${isInsufficientGas ? 'border border-danger bg-danger bg-opacity-10' : 'border border-success bg-success bg-opacity-10'}`}>
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 className={`mb-1 ${isInsufficientGas ? 'text-danger' : 'text-success'}`}>
+              ⛽ Total Gas Cost
+            </h5>
+            <div className="d-flex align-items-center">
+              <span className="h4 mb-0 me-2">{totalFee.toFixed(6)}</span>
+              <span className={`modern-badge ${isInsufficientGas ? 'modern-badge-danger' : 'modern-badge-warning'}`}>
+                ETH
+              </span>
             </div>
-          )}
-        </h4>
-        <small className="text-muted">
-          Available: {ethBalance.toFixed(6)} ETH
-        </small>
+          </div>
+          <div className="text-end">
+            <small className="text-muted">Available: {ethBalance.toFixed(6)} ETH</small>
+            {isInsufficientGas && (
+              <div className="mt-1">
+                <span className="modern-badge modern-badge-danger">⚠️ Insufficient ETH!</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
