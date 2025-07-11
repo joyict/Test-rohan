@@ -269,11 +269,9 @@ const SenderTable = (props) => {
           <strong>Example:</strong> <code>0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6</code>
         </small>
       </div>
-    </div>
-  );
-};
 
-export default SenderTable;
+      {error && (
+        <Alert variant="danger" onClose={() => setError("")} dismissible>
           {error}
         </Alert>
       )}
