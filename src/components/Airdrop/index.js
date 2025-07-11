@@ -1,5 +1,4 @@
 import Button from "react-bootstrap/Button";
-import { Badge } from "react-bootstrap";
 
 const Airdrop = (props) => {
   const { isConnected, handleAirdrop, walletCount, totalTokens, totalFee } = props;

@@ -1,5 +1,4 @@
 import "./App.css";
-import Nav from "./Nav/Nav";
 import TokenPart from "./Token/Token";
 import SenderTable from "./Table";
 import Transfer from "./Transfer/Transfer";
@@ -7,7 +6,6 @@ import ConnectWallet from "./ConnectWallet";
 import Fee from "./Fee";
 import Airdrop from "./Airdrop";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Spinner, Alert } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
@@ -39,19 +37,23 @@ function App() {
 
   // Initialize MetaMask connection on component mount
   useEffect(() => {
-    if (isMetaMaskInstalled()) {
-      checkConnection();
-      setupEventListeners();
-    }
+    const initializeApp = async () => {
+      if (isMetaMaskInstalled()) {
+        await checkConnection();
+        setupEventListeners();
+      }
+    };
+    initializeApp();
   }, []);
 
   // Fetch balances when account or token changes
   useEffect(() => {
-    if (isConnected && account && tokenAddress) {
-      getTokenBalance();
-      getEthBalance();
+    if (isMetaMaskInstalled()) {
+      if (isConnected && account && tokenAddress) {
+        getTokenBalance();
+        getEthBalance();
+      }
     }
-  }, [isConnected, account, tokenAddress]);
 
   // Check if already connected
   const checkConnection = async () => {
