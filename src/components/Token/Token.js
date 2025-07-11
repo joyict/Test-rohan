@@ -61,6 +61,7 @@ const TokenPart = (props) => {
       <div className="balanceToken">
         <h4>
           Balance: {balanceAmount.toFixed(6)} {tokenSymbol && <Badge bg="primary">{tokenSymbol}</Badge>}
+          }
         </h4>
       </div>
     </div>
